@@ -23,7 +23,7 @@ The Jackson Estuarine Lab (JEL) is located in Durham, NH and is part of the Grea
 #### *Objectives:*
 
 1.  Compare chlorophyll a concentrations between CML and JEL in 2024.
-2.  Analyze the trends in chlorophyll a concentrations throughout the year at both CML and JEL in 2024.
+2.  Visualize the overall yearly trends in chlorophyll a concentrations at both CML and JEL in 2024.
 3.  See how chlorophyll a concentrations vary seasonally at CML and JEL in 2024.
 4.  Compare the abundance of picoeukaryotes, nanoeukaryotes, and cyanobacteria between CML and JEL in 2024.
 5.  Analyze how picoeukaryote, nanoeukaryote, and cyanobacteria concentrations vary seasonally at CML and JEL in 2024.
@@ -40,7 +40,7 @@ To process the data I first loaded in the packages I needed to be able to organi
 
 #### *Analysis of chlorophyll a data*
 
-To compare 2024 chlorophyll a concentrations between the two sites I found the mean for each site and graphed these as a bar graph. I did a t test to see if they were significantly different from each other. I then made a line graph of the raw chlorophyll a concentrations throughout the year to visualize the trends over the course of the year, faceted by site. I did linear regression analysis of these concentrations for each site to see if they were increasing or decreasing over the course of the year. Next I wanted to visualize and compare chlorophyll a counts by season for each site. I started with CML and made a boxplot to visualize chlorophyll a by season. I also visualized the chlorophyll a data with a histogram and qqplot to check for normality. Once I saw that the data were normally distributed, I did an ANOVA test to see if any of the seasons were significantly different. When I got a significant p value I then did a Tukey test to figure out which season was significantly different from which. I then followed this same process for the JEL data.
+To compare 2024 chlorophyll a concentrations between the two sites I found the mean for each site and graphed these as a bar graph. I did a t test to see if they were significantly different from each other. I then made a line graph of the raw chlorophyll a concentrations throughout the year to visualize the trends over the course of the year, faceted by site. Next I wanted to visualize and compare chlorophyll a counts by season for each site. I started with CML and made a boxplot to visualize chlorophyll a by season. I also visualized the chlorophyll a data with a histogram and qqplot to check for normality. Once I saw that the data were normally distributed, I did an ANOVA test to see if any of the seasons were significantly different. When I got a significant p value I then did a Tukey test to figure out which season was significantly different from which. I then followed this same process for the JEL data.
 
 #### *Analysis of cyanobacteria, picoeukaryote, nanoeukaryote data*
 
@@ -112,16 +112,16 @@ t.test(Chlorophyll ~ Location, data = data_2024)
 
 #### *Objective 2*
 
-There was a weak, positive linear trend of the chlorophyll a concentrations at CML throughout the course of 2024 (slope = 0.0036). There was a slightly stronger, positive trend in chlorophyll a concentrations at JEL throughout 2024 (slope = 0.0191). Chlorophyll a concentrations varied more at JEL, but they generally followed the same yearly trends at both sites. Both sites had a spike in May and August (Figure 2). JEL had a large spike at the end of the year, but CML did not (Figure 2).
+Chlorophyll a concentrations varied more at JEL than at CML, but they generally followed the same yearly trends at both sites. Both sites had a spike in May and August and some other similar, smaller spikes (Figure 2). JEL had a large spike at the end of the year, but CML did not (Figure 2).
 
 ```{r}
 #| output: TRUE
-#| fig-cap: "Line graph of weekly chlorophyll a concentrations (ug/L) at CML and JEL throughout 2024. Black lines represent linear trends"
+#| fig-cap: "Line graph of weekly chlorophyll a concentrations (ug/L) at CML and JEL throughout 2024"
 
 #CHLOROPHYLL OVER TIME, BOTH SITES 
 
-#plot with linear line
-ggplot(data = data_2024, aes(x = date, y = Chlorophyll, color = Location)) + geom_point() + geom_line() + ylab("Chlorophyll a concentration (ug/L)") + xlab("Date") + theme_classic() + facet_wrap(~Location) + geom_smooth(method = "lm", se = FALSE, color = "black")  + 
+#plot 
+ggplot(data = data_2024, aes(x = date, y = Chlorophyll, color = Location)) + geom_point() + geom_line() + ylab("Chlorophyll a concentration (ug/L)") + xlab("Date") + theme_classic() + facet_wrap(~Location) + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
   scale_color_manual(values = c("CML" = "cornflowerblue", "JEL" = "orange")) + scale_fill_manual(values = c("CML" = "cornflowerblue", "JEL" = "orange"))
 ```
@@ -136,33 +136,6 @@ JEL<- data_2024 %>%
   filter(Location == "JEL")
 ```
 
-```{r}
-# Fit a linear model to the CML data
-#lm(response ~ explanatory, data = df)
-CML_chlor_model <- lm(Chlorophyll ~ date, data = CML)
-
-#print the summary of the linear model
-summary(CML_chlor_model)
-
-#print y intercept and slope of linear regression 
-coef(CML_chlor_model)
-
-#slope is positive but small (0.003586193)
-```
-
-```{r}
-# Fit a linear model to the JEL data
-#lm(response ~ explanatory, data = df)
-JEL_chlor_model <- lm(Chlorophyll ~ date, data = JEL)
-
-#print the summary of the linear model
-summary(JEL_chlor_model)
-
-#print y intercept and slope of linear regression 
-coef(JEL_chlor_model)
-
-#slope is positive but small (0.01911108)
-```
 
 #### *Objective 3*
 
